@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VarWISE Viewer</title>
+</head>
+<link rel="stylesheet" href="css/pico.classless.min.css">
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>
+    body{
+        display: block;
+        padding: 1.75em;
+    }
+    h2{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .type{
+        font-size: 32px;
+        padding: 0px 1em;
+        color: #590f0f;
+        font-style: italic;
+    }
+    .frame{
+        width: 100%;
+        display: grid;
+        grid-template-rows: 3.5em 5fr 7fr;
+        grid-auto-flow: row;
+    }
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;  
+    }
+    .title{
+        width: 100%;
+        padding: 10px 10%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        grid-auto-flow: row;
+        vertical-align: middle;
+        margin: auto;
+    }
+
+    .center{
+        display: grid;
+        grid-auto-columns: 1fr 1fr;
+        grid-auto-flow: column;
+    }
+
+    .nextprev{
+        font-size: 16px;
+    }
+
+    #title{
+        font-size: 30px;
+        
+    }
+
+    .folding_container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        height: 100%;
+    }
+
+    #period{
+        width: 14em;
+        counter-increment: none;
+    }
+
+    #folded_lightcurve{
+        width: 100%;
+        height: 30em;
+    }
+    #lightcurve{
+        width: 100%;
+        height: 35em;
+    }
+    .bottom{
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: 2fr 3fr;
+        margin-top: 2em;
+        padding: 1em;
+    }
+
+    #wiseview{
+        width: 100%;
+        height: 100%;
+        border: 2px solid black;
+        margin: 1em
+        
+    }
+    .home{
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 1.75em;
+    }
+</style>
+<body id="body">
+<a href="/" class="home"><svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 26 26"><path d="M 20 2.03125 C 19.449219 2.03125 19 2.480469 19 3.03125 L 19 7.8125 L 13.71875 2.53125 C 13.328125 2.140625 12.671875 2.140625 12.28125 2.53125 L 0.5625 14.28125 C 0.171875 14.671875 0.171875 15.296875 0.5625 15.6875 C 0.953125 16.078125 1.578125 16.078125 1.96875 15.6875 L 13 4.65625 L 24.0625 15.71875 C 24.257813 15.914063 24.523438 16.03125 24.78125 16.03125 C 25.039063 16.03125 25.273438 15.914063 25.46875 15.71875 C 25.859375 15.328125 25.859375 14.703125 25.46875 14.3125 L 22 10.84375 L 22 3.03125 C 22 2.480469 21.550781 2.03125 21 2.03125 Z M 13 6.5 L 2 17.5 L 2 23 C 2 24.65625 3.34375 26 5 26 L 21 26 C 22.65625 26 24 24.65625 24 23 L 24 17.5 Z M 11 16 L 15 16 C 15.550781 16 16 16.449219 16 17 L 16 23 C 16 23.550781 15.550781 24 15 24 L 11 24 C 10.449219 24 10 23.550781 10 23 L 10 17 C 10 16.449219 10.449219 16 11 16 Z"/></svg></a>
+<div class="frame">
+    <div class="title">
+        <button id="previous" class="nextprev">Previous Object</button>
+        <h2 id="title">{{ titletext }} <span class="type">{{ type }}</span></h2>
+        <button id="next" class="nextprev">Next Object</button></div>
+    <div class="center">
+        <div class="left"><div id="lightcurve"></div></div>
+
+        <dif class="right"><div class="folding_container"><div id="folded_lightcurve"></div><div>period = <input type="number" id="period"></div></div></dif>
+    </div>
+    <div class="bottom">
+        <div style="display:flex;justify-content:start;flex-direction: column;">
+            <table>
+                <tr>
+                    <th>Right Ascension</th> <td>{{ RAJ2000 }}</td>
+                    <th>W1 Amplitude</th> <td>{{ W1_amp }}</td>
+                </tr>
+                <tr>
+                    <th>Declination</th> <td>{{ DecJ2000 }}</td>
+                    <th>W2 Amplitude</th> <td>{{ W2_amp }}</td>
+                </tr>
+                <tr>
+                    <th>Jmag</th> <td>{{ Jmag }}</td>
+                    <th>Variability SNR</th> <td>{{ variability_snr }}</td>
+                </tr>
+                <tr>
+                    <th>Hmag</th> <td>{{ Hmag }}</td>
+                    <th>type</th> <td>{{ type }}</td>
+                </tr>
+                <tr>
+                    <th>Kmag</th> <td>{{ Kmag }}</td>
+                    <th>confidence</th> <td>{{ confidence }}</td>
+                </tr>
+                <tr>
+                    <th>W1mpro</th> <td>{{ W1mag }}</td>
+                    <th>SIMBAD</th> <td>{{ simbad_type }}</td>
+                </tr>
+                <tr>
+                    <th>W2mpro</th> <td>{{ W2mag }}</td>
+                    <th>Period 1</th> <td>{{ period_peak_1 }}</td>
+                </tr>
+                <tr>
+                    <th>W3mpro</th> <td>{{ W3mag }}</td>
+                    <th>Period 2</th> <td>{{ period_peak_2 }}</td>
+                </tr>
+                <tr>
+                    <th>W4mpro</th> <td>{{ W4mag }}</td>
+                    <th>Period 1 Score</th> <td>{{ period_significance }}</td>
+                </tr>
+            </table>
+            <br style="height:0;"> 
+            <span>Coordinates: {{ RAJ2000 }}, {{ DecJ2000 }}</span>
+        </div>
+        <div id="wiseview">
+            <embed type="text/html", width="100%", height="100%" id="wiseview_emb" />
+        </div>
+    </div>
+
+</div>  
+
+<script type="text/javascript">
+    var lightcurve = {{ lc_json | safe }};
+    var folded_lightcurve = {{ folded_lc_json | safe }};
+    Plotly.plot("lightcurve", lightcurve, {responsive: true});
+    Plotly.plot("folded_lightcurve", folded_lightcurve, {responsive: true});
+
+    var wv_url = "http://byw.tools/wiseview#ra="+ {{ RAJ2000 }} + "&dec=" + {{ DecJ2000 }} + "&size=176&band=3&speed=500&minbright=-50.0000&maxbright=500.0000&window=0.5&diff_window=1&linear=1&color=&zoom=9&border=0&gaia=0&invert=1&maxdyr=0&scandir=0&neowise=0&diff=0&outer_epochs=0&unique_window=1&smooth_scan=0&shift=0&pmra=0&pmdec=0&synth_a=0&synth_a_sub=0&synth_a_ra=&synth_a_dec=&synth_a_w1=&synth_a_w2=&synth_a_pmra=0&synth_a_pmdec=0&synth_a_mjd=&synth_b=0&synth_b_sub=0&synth_b_ra=&synth_b_dec=&synth_b_w1=&synth_b_w2=&synth_b_pmra=0&synth_b_pmdec=0&synth_b_mjd="
+
+    document.getElementById("wiseview_emb").src = wv_url;
+
+    function update_period(){
+        var period = document.getElementById("period").value;
+        var folded_lightcurve = {{ folded_lc_json | safe }};
+        
+        // Get the trace data
+        var trace = folded_lightcurve.data[0];
+
+        var x = trace.x;
+        var y = trace.y;
+        var new_x = x.map(function(val){
+            return val % period;
+        });
+
+        // Update the trace data
+        trace.x = new_x;
+        Plotly.deleteTraces("folded_lightcurve", 0);
+        Plotly.addTraces("folded_lightcurve", trace);
+
+        Plotly.relayout("folded_lightcurve", {title: {text: "p = " + period + "d"}});
+
+        Plotly.redraw("folded_lightcurve", folded_lightcurve, {responsive: true});
+    }
+
+    function nextobj(){
+        // Send a POST request to the server to get the next object, then reload the page
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/nextobj", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        
+    }
+
+    document.getElementById("period").addEventListener("change", update_period);
+    var pd = {{ period_peak_1 }};
+    document.getElementById("period").value = pd;
+    update_period();
+
+
+    var next_id = {{ nextid }};
+    var prev_id = {{ previd }};
+    // Add event listeners to the next and previous buttons
+
+    function loading() {
+        document.getElementById("body").innerHTML =`
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h1>Querying Data...</h1>
+        </div>`;
+    }
+
+    document.getElementById("next").addEventListener("click", function(){
+        console.log(next_id)
+        loading();
+        window.location.href = "/" + next_id;
+    });
+    document.getElementById("previous").addEventListener("click", function(){
+        console.log(prev_id)
+        loading();
+        window.location.href = "/" + prev_id;
+    });
+</script>
+</body>
+</html>

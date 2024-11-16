@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VarWISE Viewer</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />  
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+<style>
+
+</style>
+<body id="body">
+
+<table id="tbl"></table>
+
+<script>
+    var cols = {{ cols | safe }};
+    var data = {{ data | safe }};
+    console.log(cols)
+
+    function loading() {
+        document.getElementById("body").innerHTML =`
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h1>Querying Data...</h1>
+        </div>`;
+    }
+
+    columnnames = []
+    special = { "data": "cluster_id", "name": "cluster_id", "title": "cluster_id | VIEW",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+            if(oData.cluster_id) {
+                $(nTd).html("<a href='/"+oData.cluster_id+"'>"+oData.cluster_id+"</a>");
+            }
+        }
+    }
+    columnnames.push(special)
+    for (var i = 1; i < cols.length; i++) {
+        columnnames.push({ data: (cols[i]), title: cols[i] });
+    }
+
+
+    console.log(columnnames)
+    let table = new DataTable(document.getElementById("tbl"), {
+        data: data,
+        columns: columnnames
+    });
+
+    document.querySelectorAll("a").forEach(a => {
+        a.addEventListener("click", loading);
+    });
+</script>
+</body>
+</html>
