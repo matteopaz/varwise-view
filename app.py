@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from joblib import Parallel, delayed
 from flask import Flask, render_template
-from __init__ import query_ahead, port
+from __init__ import preload, port
 from main import Loader, Object, plot_lightcurve
 from json import dumps
 from plotly import utils
@@ -25,6 +25,10 @@ def cache(cid):
             pkl.dump(obj, f)
         return obj
     
+if preload:
+    print("Preloading objects...")
+    Parallel(n_jobs=-1)(delayed(cache)(cid) for cid in cids)
+    print("Preloading complete.")
 
 @app.route("/")
 def idx():
