@@ -24,8 +24,8 @@ class Object:
         self.timeseries = self.query_neowise()
         
     def query_neowise(self):
-        print("Querying Neowise at ", self.coord)
-        res = Irsa.query_region(self.coord, catalog='neowiser_p1bs_psd', radius=query_radius*u.arcsec)
+        res = Irsa.query_region(self.coord, catalog='neowiser_p1bs_psd', radius=query_radius*u.arcsec,
+                                spatial='Cone', columns='w1mpro,w1sigmpro,w2mpro,w2sigmpro,mjd,cc_flags,qual_frame,w1rchi2')
         tbl = res.to_pandas()
         
         tbl = tbl[tbl["w1rchi2"] < 10]

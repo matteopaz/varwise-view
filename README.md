@@ -3,7 +3,7 @@
 Required packages:
 ```
 pip install astroquery astropy
-pip install plotly joblib pandas numpy
+pip install plotly joblib pandas numpy pandasql
 pip install flask
 ```
 
@@ -13,6 +13,6 @@ Clone this repository:
 
 # Usage
 
-Name your catalog/subcatalog of choice `catalog.csv` and place into the root directory.
+Name your catalog/subcatalog of choice `catalog.csv` and place into the root directory. Alternatively, in `__init__.py`, define the `QUERY` SQL constraint and run `python filter.py`, which will produce a subset of either VarWISE or VarWISE pure.
 
-To start the server, run `python app.py`. Navigate to `localhost:5000` on your browser.
+To start the server, run `python app.py`. Navigate to `localhost:5000` on your browser. Light mode is strongly recommended.

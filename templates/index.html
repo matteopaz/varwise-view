@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VarWISE Viewer</title>
-</head>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />  
-<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-<style>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />  
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <style>
 
-</style>
+    </style>
+</head>
+
 <body id="body">
 
 <table id="tbl"></table>
@@ -18,7 +20,7 @@
 <script>
     var cols = {{ cols | safe }};
     var data = {{ data | safe }};
-    console.log(cols)
+    console.log(data)
 
     function loading() {
         document.getElementById("body").innerHTML =`
@@ -31,7 +33,7 @@
     special = { "data": "cluster_id", "name": "cluster_id", "title": "cluster_id | VIEW",
         fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
             if(oData.cluster_id) {
-                $(nTd).html("<a href='/"+oData.cluster_id+"'>"+oData.cluster_id+"</a>");
+                $(nTd).html("<a href='/object/"+oData.cluster_id+"'>"+oData.cluster_id+"</a>");
             }
         }
     }
