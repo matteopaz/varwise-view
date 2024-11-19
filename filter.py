@@ -3,6 +3,10 @@ from pandasql import sqldf
 from __init__ import QUERY, ROWLIMIT, USE_PURE_CATALOG, SORTBY
 
 catalog = pd.read_csv("varwise_cats/pure_VarWISE.csv" if USE_PURE_CATALOG else "varwise_cats/VarWISE.csv")
+
+# shuffle the catalog
+catalog = catalog.sample(frac=1, random_state=0)
+
 if SORTBY:
     catalog = catalog.sort_values(by=SORTBY[0], ascending=SORTBY[1])
 
