@@ -80,7 +80,7 @@ def plot_lightcurve(obj, periodic=False, period=0):
     fig = go.Figure()
     t = obj.timeseries["t"]
     if periodic and period > 0:
-        t = t % period
+        t = (t % period)
     
     w1 = obj.timeseries["w1"]
     w1s = obj.timeseries["w1s"]

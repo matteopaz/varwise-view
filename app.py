@@ -89,5 +89,5 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
     print("Sideloader processes ({}) launched.".format(sideloader_threads))
     
     if __name__ == "__main__":
-        app.run(port=port)
+        app.run(port=port, debug=True)
     print("Sideloader processes launched.")
