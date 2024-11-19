@@ -90,10 +90,10 @@ def plot_lightcurve(obj, periodic=False, period=0):
     w12 = w1 - w2
     w12s = np.sqrt(w1s**2 + w2s**2)
     
-    fig.add_trace(go.Scatter(x=t, y=w1, mode='markers', marker=dict(size=5, color="blue"), opacity=0.75, marker_symbol="square", error_y=dict(type='data', array=w1s, visible=True, color="rgba(0,0,255,0.35)"), name='W1'))
+    fig.add_trace(go.Scatter(x=t, y=w1, mode='markers', marker=dict(size=6.5, color="blue"), opacity=0.75, marker_symbol="square", error_y=dict(type='data', array=w1s, visible=True, color="rgba(0,0,255,0.35)"), name='W1'))
     if not periodic:
-        fig.add_trace(go.Scatter(x=t, y=w2, mode='markers', marker=dict(size=5, color="red"), opacity=0.75, marker_symbol="square", error_y=dict(type='data', array=w2s, visible=True, color="rgba(255,0,0,0.35)"), name='W2'))
-        fig.add_trace(go.Scatter(x=t, y=w12, mode='markers', marker=dict(size=5, color="green"), opacity=0.75, marker_symbol="diamond", error_y=dict(type='data', array=w12s, visible=True, color="rgba(0,255,0,0.35)"), name='W1-W2'))
+        fig.add_trace(go.Scatter(x=t, y=w2, mode='markers', marker=dict(size=6.5, color="red"), opacity=0.75, marker_symbol="square", error_y=dict(type='data', array=w2s, visible=True, color="rgba(255,0,0,0.35)"), name='W2'))
+        fig.add_trace(go.Scatter(x=t, y=w12, mode='markers', marker=dict(size=6.5, color="green"), opacity=0.75, marker_symbol="diamond", error_y=dict(type='data', array=w12s, visible=True, color="rgba(0,255,0,0.35)"), name='W1-W2'))
         # only W1 should be visible at first
         fig.data[1].visible = "legendonly"
         fig.data[2].visible = "legendonly"

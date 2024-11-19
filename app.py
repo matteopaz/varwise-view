@@ -32,7 +32,7 @@ def cache_all(cids):
         cache(cid)
 
 if preload:
-    cache_all(cids)
+    Parallel(n_jobs=sideloader_threads)(delayed(cache)(cid) for cid in cids)
 
 
 @app.route("/")

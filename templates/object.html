@@ -197,15 +197,18 @@
         var x = trace.x;
         var y = trace.y;
         var new_x = x.map(function(val){
-            return val % period;
+            return (val % period)/period;
         });
+        new_x.concat(new_x.map(function(val){
+            return val + 1;
+        }));
 
         // Update the trace data
         trace.x = new_x;
         Plotly.deleteTraces("folded_lightcurve", 0);
         Plotly.addTraces("folded_lightcurve", trace);
-
-        Plotly.relayout("folded_lightcurve", {title: {text: "p = " + period + "d"}});
+        // Set x axis title to "phase"
+        Plotly.relayout("folded_lightcurve", {title: {text: "p = " + period + "d"}, xaxis: {title: "phase"}});
 
         Plotly.redraw("folded_lightcurve", folded_lightcurve, {responsive: true});
     }
