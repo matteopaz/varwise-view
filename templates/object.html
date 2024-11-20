@@ -187,7 +187,7 @@
     Plotly.plot("lightcurve", lightcurve, {responsive: true});
     Plotly.plot("folded_lightcurve", folded_lightcurve, {responsive: true});
 
-    var wv_url = "http://byw.tools/wiseview#ra="+ {{ RAJ2000 }} + "&dec=" + {{ DecJ2000 }} + "&gaia=1"
+    var wv_url = "http://byw.tools/wiseview#ra="+ {{ RAJ2000 }} + "&dec=" + {{ DecJ2000 }} + "&gaia=1&band=3&size=120"
 
     document.getElementById("wiseview_emb").src = wv_url;
 
