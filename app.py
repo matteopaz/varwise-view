@@ -47,7 +47,7 @@ def idx():
     return render_template("index.html", data=data_json, cols=cols_json)
 
 @app.route('/object/<cid>')
-def daily_post(cid):
+def getobject(cid):
     cid = int(cid)
     if cid not in catalog.index:
         return "Not found", 404
@@ -74,12 +74,29 @@ def daily_post(cid):
     dfpd = catalogstats["period_peak_1"]
     if not (dfpd > 0): # if period is not available, set default period to 4000 days
         dfpd = 4000.0
-    return render_template("object.html", titletext=title, lc_json=lightcurve, folded_lc_json=pdlightcurve, **catalogstats, prevnext=dumps(prevnext), defaultperiod=dfpd)
+
+    lc_table = pd.DataFrame({"mjd": obj.timeseries["t"], "w1mpro": obj.timeseries["w1"], "w1sigmpro": obj.timeseries["w1s"], 
+                        "w2mpro": obj.timeseries["w2"], "w2sigmpro": obj.timeseries["w2s"]})
+    csv = lc_table.to_csv(index=False)
+    return render_template("object.html", titletext=title, lc_json=lightcurve, folded_lc_json=pdlightcurve, **catalogstats, prevnext=dumps(prevnext), defaultperiod=dfpd, lc_csv=dumps(csv))
     
+# @app.route('/download_lc/<cid>')
+# def download_lc(cid):
+#     cid = int(cid)
+#     if cid not in catalog.index:
+#         return "Not found", 404
+    
+#     obj = cache(cid)
+#     tbl = pd.DataFrame({"mjd": obj.timeseries["t"], "w1mpro": obj.timeseries["w1"], "w1sigmpro": obj.timeseries["w1s"], 
+#                         "w2": obj.timeseries["w2"], "w2sigmpro": obj.timeseries["w2s"]})
+    
+#     return tbl.to_csv(index=False)
+
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
 

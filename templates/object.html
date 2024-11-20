@@ -6,6 +6,7 @@
     <title>VarWISE Viewer</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="http://danml.com/js/download.js"></script>
     <style>
         :root {
             color-scheme: light only !important;
@@ -167,6 +168,9 @@
             </table>
             <br style="height:0;"> 
             <span>Coordinates: {{ RAJ2000 }}, {{ DecJ2000 }}</span>
+            <br>
+            <button id="download_lc">Download Lightcurve Data (CSV)</button>
+            
         </div>
         <div id="wiseview">
             <embed type="text/html", width="100%", height="100%" id="wiseview_emb" />
@@ -183,7 +187,7 @@
     Plotly.plot("lightcurve", lightcurve, {responsive: true});
     Plotly.plot("folded_lightcurve", folded_lightcurve, {responsive: true});
 
-    var wv_url = "http://byw.tools/wiseview#ra="+ {{ RAJ2000 }} + "&dec=" + {{ DecJ2000 }} + "&size=176&band=3&speed=500&minbright=-50.0000&maxbright=500.0000&window=0.5&diff_window=1&linear=1&color=&zoom=9&border=0&gaia=0&invert=1&maxdyr=0&scandir=0&neowise=0&diff=0&outer_epochs=0&unique_window=1&smooth_scan=0&shift=0&pmra=0&pmdec=0&synth_a=0&synth_a_sub=0&synth_a_ra=&synth_a_dec=&synth_a_w1=&synth_a_w2=&synth_a_pmra=0&synth_a_pmdec=0&synth_a_mjd=&synth_b=0&synth_b_sub=0&synth_b_ra=&synth_b_dec=&synth_b_w1=&synth_b_w2=&synth_b_pmra=0&synth_b_pmdec=0&synth_b_mjd="
+    var wv_url = "http://byw.tools/wiseview#ra="+ {{ RAJ2000 }} + "&dec=" + {{ DecJ2000 }} + "&gaia=1"
 
     document.getElementById("wiseview_emb").src = wv_url;
 
@@ -219,14 +223,6 @@
         Plotly.redraw("folded_lightcurve", folded_lightcurve, {responsive: true});
     }
 
-    function nextobj(){
-        // Send a POST request to the server to get the next object, then reload the page
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/nextobj", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        
-    }
-
     document.getElementById("period").addEventListener("change", update_period);
     var pd = {{ defaultperiod }};
     document.getElementById("period").value = pd;
@@ -254,6 +250,12 @@
         console.log(prev_id)
         loading();
         window.location.href = "/object/" + prev_id;
+    });
+
+    var csvfile = {{ lc_csv | safe }};
+    var id = document.URL.split("/").pop();
+    document.getElementById("download_lc").addEventListener("click", function(){
+        download(String(csvfile), id+".csv", "text/csv");
     });
 </script>
 </body>
